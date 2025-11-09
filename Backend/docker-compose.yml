@@ -1,0 +1,27 @@
+services:
+  app:
+    build: .
+    container_name: backend_app
+    ports:
+      - '3000:3333'
+    environment:
+      - DATABASE_URL=postgresql://docker:docker@pg:5435/gestao_funcionarios
+      - NODE_ENV=production
+    volumes:
+      - pg:/var/lib/postgresql/data
+  pg:
+    image: bitnami/postgresql:latest
+    container_name: postgres_backend
+    restart: unless-stopped
+    ports:
+      - '5435:5435'
+    environment:
+      - POSTGRESQL_PORT_NUMBER=5435
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=gestao_funcionarios
+    volumes:
+      - './docker:/docker-entrypoint-initdb.d'
+
+volumes:
+  pg:

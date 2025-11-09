@@ -1,9 +1,14 @@
 import api from './api';
 import type { Funcionario } from '../types/Funcionario';
 
+interface SearchParams {
+  searchQuery?: string;
+  searchBy?: string;
+}
+
 export const funcionarioService = {
-  async getAll(): Promise<Funcionario[]> {
-    const response = await api.get('/funcionarios');
+  async getAll(params?: SearchParams): Promise<Funcionario[]> {
+    const response = await api.get('/funcionarios', { params });
     return response.data.funcionarios;
   },
 

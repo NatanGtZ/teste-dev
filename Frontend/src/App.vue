@@ -8,6 +8,7 @@ import Button from 'primevue/button';
 import Toast from 'primevue/toast';
 import ConfirmDialog from 'primevue/confirmdialog';
 import FuncionarioModal from './components/modal/FuncionarioModal.vue';
+import FuncionarioSearch from './components/search/FuncionarioSearch.vue';
 import { funcionarioService } from './services/funcionarioService';
 import type { Funcionario } from './types/Funcionario';
 
@@ -18,6 +19,7 @@ const funcionarios = ref<Funcionario[]>([]);
 const loading = ref(false);
 const modalVisible = ref(false);
 const funcionarioSelecionado = ref<Funcionario | null>(null);
+const searchParams = ref<{ searchQuery?: string; searchBy?: string }>({});
 
 onMounted(() => {
   loadFuncionarios();
@@ -26,13 +28,15 @@ onMounted(() => {
 const loadFuncionarios = async () => {
   loading.value = true;
   try {
-    funcionarios.value = await funcionarioService.getAll();
-    toast.add({
-      severity: 'success',
-      summary: 'Sucesso',
-      detail: 'Funcionários carregados com sucesso',
-      life: 3000,
-    });
+    funcionarios.value = await funcionarioService.getAll(searchParams.value);
+    if (!searchParams.value.searchQuery) {
+      toast.add({
+        severity: 'success',
+        summary: 'Sucesso',
+        detail: 'Funcionários carregados com sucesso',
+        life: 3000,
+      });
+    }
   } catch (error: any) {
     toast.add({
       severity: 'error',
@@ -43,6 +47,34 @@ const loadFuncionarios = async () => {
   } finally {
     loading.value = false;
   }
+};
+
+const handleSearch = async (params: { searchQuery: string; searchBy: string }) => {
+  searchParams.value = params;
+  loading.value = true;
+  try {
+    funcionarios.value = await funcionarioService.getAll(searchParams.value);
+    toast.add({
+      severity: 'info',
+      summary: 'Busca realizada',
+      detail: `${funcionarios.value.length} funcionário(s) encontrado(s)`,
+      life: 3000,
+    });
+  } catch (error: any) {
+    toast.add({
+      severity: 'error',
+      summary: 'Erro',
+      detail: error.response?.data?.message || 'Erro ao buscar funcionários',
+      life: 5000,
+    });
+  } finally {
+    loading.value = false;
+  }
+};
+
+const handleClearSearch = () => {
+  searchParams.value = {};
+  loadFuncionarios();
 };
 
 const openModalNovo = () => {
@@ -133,6 +165,11 @@ const deleteFuncionario = async (id: number) => {
       />
     </div>
 
+    <FuncionarioSearch 
+      @search="handleSearch"
+      @clear="handleClearSearch"
+    />
+
     <div class="table-container">
       <DataTable 
         :value="funcionarios" 
@@ -144,9 +181,9 @@ const deleteFuncionario = async (id: number) => {
         responsiveLayout="scroll"
         emptyMessage="Nenhum funcionário cadastrado"
       >
-        <Column field="cpf" header="CPF" sortable></Column>
+        <Column field="cpf" header="CPF"></Column>
         <Column field="name" header="Nome" sortable></Column>
-        <Column field="email" header="E-mail" sortable></Column>
+        <Column field="email" header="E-mail"></Column>
         <Column field="tamanho_camiseta" header="Camiseta" sortable></Column>
         <Column field="tamanho_calcado" header="Calçado" sortable></Column>
         <Column header="Ações" :exportable="false">

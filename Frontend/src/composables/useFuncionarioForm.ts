@@ -60,7 +60,7 @@ export function useFuncionarioForm(initialData?: Funcionario | null) {
     }
     
     if (!formData.value.name) {
-      errors.value.nome = 'Nome é obrigatório';
+      errors.value.name = 'Nome é obrigatório';
     }
     
     if (!formData.value.email) {
