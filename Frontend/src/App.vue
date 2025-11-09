@@ -7,7 +7,7 @@ import Column from 'primevue/column';
 import Button from 'primevue/button';
 import Toast from 'primevue/toast';
 import ConfirmDialog from 'primevue/confirmdialog';
-import FuncionarioModal from './components/FuncionarioModal.vue';
+import FuncionarioModal from './components/modal/FuncionarioModal.vue';
 import { funcionarioService } from './services/funcionarioService';
 import type { Funcionario } from './types/Funcionario';
 
@@ -27,7 +27,6 @@ const loadFuncionarios = async () => {
   loading.value = true;
   try {
     funcionarios.value = await funcionarioService.getAll();
-    console.log(funcionarios.value);
     toast.add({
       severity: 'success',
       summary: 'Sucesso',
@@ -41,7 +40,6 @@ const loadFuncionarios = async () => {
       detail: error.response?.data?.message || 'Erro ao carregar funcionários',
       life: 5000,
     });
-    console.error('Erro ao carregar funcionários:', error);
   } finally {
     loading.value = false;
   }
@@ -60,7 +58,6 @@ const openModalEditar = (funcionario: Funcionario) => {
 const handleSave = async (funcionario: Funcionario) => {
   try {
     if (funcionario.id) {
-      // Atualizar
       await funcionarioService.update(funcionario.id, funcionario);
       toast.add({
         severity: 'success',
@@ -69,7 +66,6 @@ const handleSave = async (funcionario: Funcionario) => {
         life: 3000,
       });
     } else {
-      // Criar
       await funcionarioService.create(funcionario);
       toast.add({
         severity: 'success',
@@ -87,7 +83,6 @@ const handleSave = async (funcionario: Funcionario) => {
       detail: error.response?.data?.message || 'Erro ao salvar funcionário',
       life: 5000,
     });
-    console.error('Erro ao salvar funcionário:', error);
   }
 };
 
@@ -119,7 +114,6 @@ const deleteFuncionario = async (id: number) => {
       detail: error.response?.data?.message || 'Erro ao excluir funcionário',
       life: 5000,
     });
-    console.error('Erro ao excluir funcionário:', error);
   }
 };
 </script>
@@ -189,49 +183,5 @@ const deleteFuncionario = async (id: number) => {
 </template>
 
 <style scoped>
-.app-container {
-  padding: 2rem;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-}
-
-.header h1 {
-  margin: 0;
-  color: #2c3e50;
-  font-size: 2rem;
-}
-
-.table-container {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
-
-.action-buttons {
-  display: flex;
-  gap: 0.5rem;
-}
-
-:deep(.p-datatable) {
-  font-size: 0.95rem;
-}
-
-:deep(.p-datatable .p-datatable-thead > tr > th) {
-  background: #f8f9fa;
-  color: #495057;
-  font-weight: 600;
-  padding: 1rem;
-}
-
-:deep(.p-datatable .p-datatable-tbody > tr > td) {
-  padding: 1rem;
-}
+  @import './App.css';
 </style>

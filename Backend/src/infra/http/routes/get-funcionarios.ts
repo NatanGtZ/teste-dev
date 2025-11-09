@@ -9,7 +9,7 @@ export const getFuncionariosRoute: FastifyPluginAsyncZod = async server => {
     {
       schema: {
         summary: 'Get funcionarios',
-        tags: ['funcionarios'],
+        tags: ['Funcionarios'],
         querystring: z.object({
           searchQuery: z.string().optional(),
           searchBy: z.enum(['cpf', 'nome', 'email', 'tamanho_camiseta', 'tamanho_calcado']).optional().default('nome'),
