@@ -8,7 +8,7 @@ Gestão de funcionários com frontend em Vue.js, backend em Node.js/Fastify e Po
   ## Criar o arquivo .env no backend com os seguintes valores
   ### Backend (.env)
     ```env
-    DATABASE_URL=postgresql://docker:docker@postgres:5435/gestao_funcionarios
+    DATABASE_URL=postgresql://docker:docker@localhost:5435/gestao_funcionarios
     NODE_ENV=development
     ```
   ## Criar o arquivo .env no frontend com os seguintes valores
