@@ -2,8 +2,9 @@
 
 Gestão de funcionários com frontend em Vue.js, backend em Node.js/Fastify e PostgreSQL, totalmente dockerizado.
 
-## Passos para subir o projeto
+## Passos para subir o projeto com DOCKER
   ## Ter o docker instalado
+  ## Ter o NodeJs versão 22 ou superior
   ## Ter o gerenciador de pacotes npm
   ## Criar o arquivo .env no backend com os seguintes valores
   ### Backend (.env)
@@ -16,11 +17,9 @@ Gestão de funcionários com frontend em Vue.js, backend em Node.js/Fastify e Po
       ```env
       VITE_API_BASE_URL=http://localhost:3000
       ```
-  ## Entrar nas pastas Backend e Fronted, e executar o comando:
+  ## Entrar na pasta Backend, e executar o comando:
   ```
     cd Backend
-    npm install
-    cd Frontend
     npm install
   ```
   ## Na pasta raiz do projeto executar o comando: 

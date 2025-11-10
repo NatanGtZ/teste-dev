@@ -23,5 +23,7 @@ export async function createFuncionario(input: CreateFuncionarioInput){
     tamanho_calcado: input.tamanho_calcado,
   })
 
+  
+
   return result
 }

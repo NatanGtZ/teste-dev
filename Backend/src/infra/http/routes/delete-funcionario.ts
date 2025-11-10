@@ -13,8 +13,8 @@ export const deleteFuncionarioRoute: FastifyPluginAsyncZod = async server => {
           id: z.uuid(),
         }),
         response: {
-          200: z.null().describe('Funcionário atualizado com sucesso'),
-          400: z.object({ message: z.string() }).describe('Erro ao atualizar funcionário'),
+          200: z.null().describe('Funcionário excluído com sucesso'),
+          400: z.object({ message: z.string() }).describe('Erro ao excluír funcionário'),
         },
       },
     },
