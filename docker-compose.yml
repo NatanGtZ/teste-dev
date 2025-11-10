@@ -1,0 +1,71 @@
+services:
+  # Banco de Dados
+  postgres:
+    image: bitnami/postgresql:latest
+    container_name: postgres_db_dev
+    restart: unless-stopped
+    ports:
+      - '5435:5435'
+    environment:
+      - POSTGRESQL_PORT_NUMBER=5435
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=gestao_funcionarios
+    volumes:
+      - postgres_data_dev:/bitnami/postgresql
+      - ./Backend/docker:/docker-entrypoint-initdb.d
+    networks:
+      - app_network
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U docker -d gestao_funcionarios -p 5435']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: backend_api_dev
+    restart: unless-stopped
+    ports:
+      - '3000:3333'
+    environment:
+      - DATABASE_URL=postgresql://docker:docker@postgres:5435/gestao_funcionarios
+      - NODE_ENV=development
+    volumes:
+      - ./Backend:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run dev
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - app_network
+
+  # Frontend
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    container_name: frontend_app_dev
+    restart: unless-stopped
+    ports:
+      - '5173:5173'
+    environment:
+      - VITE_API_BASE_URL=http://localhost:3000
+    volumes:
+      - ./Frontend:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - app_network
+
+volumes:
+  postgres_data_dev:
+
+networks:
+  app_network:
+    driver: bridge

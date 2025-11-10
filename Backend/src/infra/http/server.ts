@@ -35,6 +35,10 @@ server.register(fastifySwaggerUi, {
   routePrefix: '/docs',
 })
 
+server.get('/health', async () => {
+  return { status: 'ok', timestamp: new Date().toISOString() }
+})
+
 server.register(getFuncionariosRoute)
 server.register(createFuncionarioRoute)
 server.register(updateFuncionarioRoute)
